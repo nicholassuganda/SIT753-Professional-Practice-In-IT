@@ -1,20 +1,20 @@
 pipeline {
     agent any
     environment {
-        DIRECTORY_PATH = '/path/project/testcode'
-        TESTING_ENVIRONMENT = 'Nick-Testing-Env'
-        STAGING_ENVIRONMENT = 'Nick-Staging-Env'
-        PRODUCTION_ENVIRONMENT = 'Nick-Prod-Env'
-        EMAIL_RECIPIENT = 'sugandanicholas@gmail.com'
+        DIRECTORY_PATH = "/path/project/testcode"
+        TESTING_ENVIRONMENT = "Nick-Testing-Env"
+        STAGING_ENVIRONMENT = "Nick-Staging-Env"
+        PRODUCTION_ENVIRONMENT = "Nick-Prod-Env"
+        EMAIL_RECIPIENT = "sugandanicholas@gmail.com"
     }
     stages {
-        stage('Build') {
+        stage("Build") {
             steps {
                 echo "Building the code using Maven"
                 // Tool: Maven
             }
         }
-        stage('Unit and Integration Tests') {
+        stage("Unit and Integration Tests") {
             steps {
                 echo "Running unit tests with JUnit"
                 echo "Running integration tests with TestNG"
@@ -27,21 +27,21 @@ pipeline {
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
                             subject: "Unit and Integration Tests - Build ${status}",
-                            body: """<p>Unit and Integration Tests have completed with status: ${status}</p>
-                                     <p>The build logs attached in this email.</p>""",
+                            body: "Unit and Integration Tests have completed with status: ${status}
+                                     The build logs attached in this email.",
                             attachLog: true
                         )
                     }
                 }
             }
         }
-        stage('Code Analysis') {
+        stage("Code Analysis") {
             steps {
                 echo "Analyzing code quality with SonarQube"
                 // Tool: SonarQube
             }
         }
-        stage('Security Scan') {
+        stage("Security Scan") {
             steps {
                 echo "Performing security scan with OWASP ZAP"
                 // Tool: OWASP ZAP
@@ -53,27 +53,27 @@ pipeline {
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
                             subject: "Security Scan - Build ${status}",
-                            body: "<p>Security Scan has completed with status: ${status}</p>
-                                     <p>The build logs attached in this email.</p>",
+                            body: "Security Scan has completed with status: ${status}
+                                     The build logs attached in this email.",
                             attachLog: true
                         )
                     }
                 }
             }
         }
-        stage('Deploy to Staging') {
+        stage("Deploy to Staging") {
             steps {
                 echo "Deploying the application to staging environment: ${env.STAGING_ENVIRONMENT}"
                 // Tool: AWS
             }
         }
-        stage('Integration Tests on Staging') {
+        stage("Integration Tests on Staging") {
             steps {
                 echo "Running integration tests on the staging environment"
                 // Tool: TestNG
             }
         }
-        stage('Deploy to Production') {
+        stage("Deploy to Production") {
             steps {
                 echo "Deploying the application to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
                 // Tool: AWS
@@ -84,8 +84,8 @@ pipeline {
                     emailext (
                         to: "${env.EMAIL_RECIPIENT}",
                         subject: "Deployment to Production - Build ${status}",
-                        body: "<p>The deployment to production has completed with status: ${status}</p>
-                                 <p>The build logs attached in this email.</p>",
+                        body: "The deployment to production has completed with status: ${status}
+                                 The build logs attached in this email.",
                         attachLog: true
                     )
                 }
