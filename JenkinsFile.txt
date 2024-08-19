@@ -36,14 +36,14 @@ pipeline {
         }
         stage('Deploy to Production') {
             steps {
-                post {
-                    always {
-                        mail to: 'sugandanicholas@gmail.com',
-                        subject: 'build status email',
-                        body: 'Build was successful'
-                    }
-                }
                 echo "Deploying to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+            }
+            post {
+                always {
+                    mail to: 'sugandanicholas@gmail.com',
+                    subject: 'build status email',
+                    body: 'Build was successful'
+                }
             }
         }
     }
