@@ -2,47 +2,92 @@ pipeline {
     agent any
     environment {
         DIRECTORY_PATH = '/path/project/testcode'
-        TESTING_ENVIRONMENT = 'Testing-Env'
+        TESTING_ENVIRONMENT = 'Nick-Testing-Env'
+        STAGING_ENVIRONMENT = 'Nick-Staging-Env'
         PRODUCTION_ENVIRONMENT = 'Nick-Prod-Env'
+        EMAIL_RECIPIENT = 'sugandanicholas@gmail.com'
     }
     stages {
         stage('Build') {
             steps {
-                echo "Fetch the source code from the directory path: ${env.DIRECTORY_PATH}"
-                echo "Compile the code and generate any necessary artifacts"
+                echo "Building the code using Maven"
+                // Tool: Maven
             }
         }
-        stage('Test') {
+        stage('Unit and Integration Tests') {
             steps {
-                echo "Initiating Unit Tests"
-                echo "Initiating Integration Tests"
+                echo "Running unit tests with JUnit"
+                echo "Running integration tests with TestNG"
+                // Tools: JUnit, TestNG
+            }
+            post {
+                always {
+                    script {
+                        def status = currentBuild.currentResult
+                        emailext (
+                            to: "${env.EMAIL_RECIPIENT}",
+                            subject: "Unit and Integration Tests - Build ${status}",
+                            body: """<p>Unit and Integration Tests have completed with status: ${status}</p>
+                                     <p>The build logs attached in this email.</p>""",
+                            attachLog: true
+                        )
+                    }
+                }
             }
         }
-        stage('Code QC') {
+        stage('Code Analysis') {
             steps {
-                echo "Check the quality of the code"
+                echo "Analyzing code quality with SonarQube"
+                // Tool: SonarQube
             }
         }
-        stage('Deploy') {
+        stage('Security Scan') {
             steps {
-                echo "Deploy the application to a testing environment: ${env.TESTING_ENVIRONMENT}"
+                echo "Performing security scan with OWASP ZAP"
+                // Tool: OWASP ZAP
+            }
+            post {
+                always {
+                    script {
+                        def status = currentBuild.currentResult
+                        emailext (
+                            to: "${env.EMAIL_RECIPIENT}",
+                            subject: "Security Scan - Build ${status}",
+                            body: "<p>Security Scan has completed with status: ${status}</p>
+                                     <p>The build logs attached in this email.</p>",
+                            attachLog: true
+                        )
+                    }
+                }
             }
         }
-        stage('Approval') {
+        stage('Deploy to Staging') {
             steps {
-                echo "Waiting for approval"
-                sleep(time: 10, unit: 'SECONDS')
+                echo "Deploying the application to staging environment: ${env.STAGING_ENVIRONMENT}"
+                // Tool: AWS
+            }
+        }
+        stage('Integration Tests on Staging') {
+            steps {
+                echo "Running integration tests on the staging environment"
+                // Tool: TestNG
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo "Deploying to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+                echo "Deploying the application to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+                // Tool: AWS
             }
             post {
                 always {
-                    mail to: 'sugandanicholas@gmail.com',
-                    subject: 'build status email',
-                    body: 'Build was successful'
+                    def status = currentBuild.currentResult
+                    emailext (
+                        to: "${env.EMAIL_RECIPIENT}",
+                        subject: "Deployment to Production - Build ${status}",
+                        body: "<p>The deployment to production has completed with status: ${status}</p>
+                                 <p>The build logs attached in this email.</p>",
+                        attachLog: true
+                    )
                 }
             }
         }
