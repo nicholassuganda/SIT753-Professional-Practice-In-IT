@@ -27,8 +27,8 @@ pipeline {
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
                             subject: "Unit and Integration Tests - Build ${status}",
-                            body: "Unit and Integration Tests have completed with status: ${status}. 
-                            The build logs attached in this email.",
+                            body: """Unit and Integration Tests have completed with status: ${status}. 
+                            The build logs attached in this email.""",
                             attachLog: true
                         )
                     }
@@ -53,8 +53,8 @@ pipeline {
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
                             subject: "Security Scan - Build ${status}",
-                            body: "Security Scan has completed with status: ${status}. 
-                            The build logs attached in this email.",
+                            body: """Security Scan has completed with status: ${status}. 
+                            The build logs attached in this email.""",
                             attachLog: true
                         )
                     }
@@ -85,8 +85,8 @@ pipeline {
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
                             subject: "Deployment to Production - Build ${status}",
-                            body: "The deployment to production has completed with status: ${status}. 
-                            The build logs attached in this email.",
+                            body: """The deployment to production has completed with status: ${status}
+                                    The build logs attached in this email.""",
                             attachLog: true
                         )
                     }
