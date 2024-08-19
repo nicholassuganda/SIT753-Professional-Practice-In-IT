@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    environment {
+        DIRECTORY_PATH = '/path/project/testcode'
+        TESTING_ENVIRONMENT = 'Testing-Env'
+        PRODUCTION_ENVIRONMENT = 'Nick-Prod-Env'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Fetch the source code from the directory path: ${env.DIRECTORY_PATH}"
+                echo "Compile the code and generate any necessary artifacts"
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Initiating Unit Tests"
+                echo "Initiating Integration Tests"
+            }
+        }
+        stage('Code QC') {
+            steps {
+                echo "Check the quality of the code"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo "Deploy the application to a testing environment: ${env.TESTING_ENVIRONMENT}"
+            }
+        }
+        stage('Approval') {
+            steps {
+                echo "Waiting for approval"
+                sleep(time: 10, unit: 'SECONDS')
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo "Deploying to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+            }
+        }
+    }
+}
