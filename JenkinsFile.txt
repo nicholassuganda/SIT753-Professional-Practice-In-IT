@@ -38,7 +38,9 @@ pipeline {
             steps {
                 post {
                     always {
-                        emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+                        mail to: 'sugandanicholas@gmail.com',
+                        subject: 'build status email',
+                        boday: 'Build was successful'
                     }
                 }
                 echo "Deploying to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
