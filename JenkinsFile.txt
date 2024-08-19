@@ -78,13 +78,16 @@ pipeline {
             }
             post {
                 always {
-                    def status = currentBuild.currentResult
-                    emailext (
-                        to: "${env.EMAIL_RECIPIENT}",
-                        subject: "Deployment to Production - Build ${status}",
-                        body: "The deployment to production has completed with status: ${status}. The build logs attached in this email.",
-                        attachLog: true
-                    )
+                    script {
+                        def status = currentBuild.currentResult
+                        emailext (
+                            to: "${env.EMAIL_RECIPIENT}",
+                            subject: "Deployment to Production - Build ${status}",
+                            body: """<p>The deployment to production has completed with status: ${status}</p>
+                                    <p>The build logs attached in this email.</p>""",
+                            attachLog: true
+                        )
+                    }
                 }
             }
         }
